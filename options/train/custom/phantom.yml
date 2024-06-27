@@ -1,0 +1,119 @@
+# ------------------------------------------------------------------------
+# Copyright (c) 2022 megvii-model. All Rights Reserved.
+# ------------------------------------------------------------------------
+# Modified from BasicSR (https://github.com/xinntao/BasicSR)
+# Copyright 2018-2020 BasicSR Authors
+# ------------------------------------------------------------------------
+# general settings
+name: phantom_yz_fft_trial_2
+model_type: ImageRestorationModel
+scale: 1
+num_gpu: 1
+manual_seed: 10
+
+datasets:
+  train:
+    name: ASLM
+    type: PairedImageDataset
+    dataroot_gt: /home/youlab/Desktop/workspace/jiashu/datasets/phantom/yz/train/gt
+    dataroot_lq: /home/youlab/Desktop/workspace/jiashu/datasets/phantom/yz/train/lq
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+    gt_size: 246
+    use_flip: true
+    use_rot: true
+    use_shuffle: true
+    num_worker_per_gpu: 8
+    batch_size_per_gpu: 5
+    dataset_enlarge_ratio: 1
+    prefetch_mode: ~
+
+  val:
+    name: reds-val300-test
+    type: PairedImageDataset
+    dataroot_gt: /home/youlab/Desktop/workspace/jiashu/datasets/phantom/yz/val/gt
+    dataroot_lq: /home/youlab/Desktop/workspace/jiashu/datasets/phantom/yz/val/lq
+    io_backend:
+      type: disk
+
+ZEST: False
+network_g:
+  type: NAFNetLocal
+  width: 64
+  enc_blk_nums: [1, 1, 1, 28]
+  middle_blk_num: 1
+  dec_blk_nums: [1, 1, 1, 1]
+
+# network_g:
+#   type: NAFNet
+#   width: 64
+#   enc_blk_nums: [2, 2, 4, 8]
+#   middle_blk_num: 12
+#   dec_blk_nums: [2, 2, 2, 2]
+# network_g:
+#   type: NAFNetLocal
+#   width: 64
+#   enc_blk_nums: [1, 1, 1, 28]
+#   middle_blk_num: 1
+#   dec_blk_nums: [1, 1, 1, 1]
+
+# path
+path:
+  pretrain_network_g: /home/youlab/Desktop/workspace/jiashu/NAFNet/experiments/pretrained_models/NAFNet-REDS-width64.pth
+  # /home/youlab/Desktop/workspace/jiashu/NAFNet/experiments/pretrained_models/NAFNet-REDS-width64.pth
+  strict_load_g: true
+  resume_state: ~
+
+# training settings
+train:
+  optim_g:
+    type: AdamW
+    lr: !!float 1e-4
+    weight_decay: !!float 1e-5
+    # 1e-3&1e-4 不行,现在试试1e-4, 1e-5
+    betas: [0.9, 0.9]
+
+  scheduler:
+    type: TrueCosineAnnealingLR
+    T_max: 10000
+    eta_min: !!float 1e-7
+
+  total_iter: 10000
+  warmup_iter: -1 # no warm up
+
+  # losses
+  pixel_opt:
+    type: PSNRLoss
+    loss_weight: 1
+    reduction: mean
+
+# validation settings
+val:
+  val_freq: !!float 2e4
+  save_img: false
+
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 0
+      test_y_channel: false
+    ssim:
+      type: calculate_ssim
+      crop_border: 0
+      test_y_channel: false
+
+# logging settings
+logger:
+  print_freq: 200
+  save_checkpoint_freq: !!float 5000
+  use_tb_logger: true
+  wandb:
+    project: ~
+    resume_id: ~
+
+# dist training settings
+dist_params:
+  backend: none
+  port: 29500
