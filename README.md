@@ -28,6 +28,8 @@ Note: It is advisable to utilize a system with at least 16 GB of RAM for optimal
 
 ## Installation Guide
 
+Typical installation time on a desktop computer is estimated to be around 10 minutes.
+
 ### Setup Instructions
 
 To install the necessary dependencies and set up the environment, execute the following commands:
@@ -39,6 +41,8 @@ python setup.py develop --no_cuda_ext
 
 ---
 ## Demonstration
+
+Using the provided network checkpoints, typical run time on a desktop computer is estimated to be around 5 minutes.
 
 ### Data Preparation 
 
