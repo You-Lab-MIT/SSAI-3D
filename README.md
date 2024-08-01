@@ -46,7 +46,7 @@ Using the provided network checkpoints, typical run time on a desktop computer i
 
 ### Data Preparation 
 
-- The required datasets can be downloaded from this [link](https://drive.google.com/drive/folders/19KhzBk-VbITqaTUqJYe6j4UGu8oleUC_?usp=drive_link). Once downloaded, please transfer them to the `./data` directory.
+- The required datasets can be downloaded from this [link](https://drive.google.com/drive/folders/19KhzBk-VbITqaTUqJYe6j4UGu8oleUC_?usp=drive_link). Once downloaded, please transfer them to the `./dataset` directory.
 
 ### Model Checkpoints
 
