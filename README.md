@@ -10,6 +10,8 @@ Self-Supervised Learning: Leverages the inherent information within a single ima
 * **Experimentally Validated High Fidelity**: Produces state-of-the-art 3D reconstructions with high accuracy in both simulated and publicly available experimental datasets with ground truth, compared to existing methods.
 * **Efficiency**: Requires only a single image stack and the shortest training time compared to existing methods.
 
+<img width="1012" alt="image" src="https://github.com/user-attachments/assets/8beebb61-3ea2-49dc-b273-50f17e796c37">
+
 ---
 
 ## System Requirements
