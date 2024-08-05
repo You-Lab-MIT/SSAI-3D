@@ -2,13 +2,7 @@
 
 ## Overview
 
-This repository provides the implementation and resources for [SSAI-3D](https://arxiv.org/abs/2406.06337), a deep learning framework for achieving high-fidelity isotropic 3D resolution recovery in microscopy. SSAI-3D is a weakly physics-informed, domain-shift-resistant framework demonstrated across diverse microscopy system and a wide array of 3D biological samples. Key features and advantages of SSAI-3D include:
-
-Self-Supervised Learning: Leverages the inherent information within a single image stack to generate a synthetic training dataset.
-
-* **Versatility and Robustness**: Effective across a variety of microscopy systems (different contrast mechanisms, unknown blurring and noise characteristics, commercial/custom-built, low/high resolution, low/high SNR) and biological samples (living/fixed, human/animal, high/low lateral-axial similarity).
-* **Experimentally Validated High Fidelity**: Produces state-of-the-art 3D reconstructions with high accuracy in both simulated and publicly available experimental datasets with ground truth, compared to existing methods.
-* **Efficiency**: Requires only a single image stack and the shortest training time compared to existing methods.
+This repository provides the implementation and resources for [SSAI-3D](https://arxiv.org/abs/2406.06337), a deep learning framework for achieving high-fidelity isotropic 3D resolution recovery in microscopy. SSAI-3D is a weakly physics-informed, domain-shift-resistant framework demonstrated across diverse microscopy system and a wide array of 3D biological samples.
 
 <img width="1012" alt="image" src="https://github.com/user-attachments/assets/8beebb61-3ea2-49dc-b273-50f17e796c37">
 
