@@ -48,11 +48,11 @@ Using the provided network checkpoints, typical run time on a desktop computer i
 
 ### Data Preparation 
 
-- The required datasets can be downloaded from this [link](https://drive.google.com/drive/folders/19KhzBk-VbITqaTUqJYe6j4UGu8oleUC_?usp=drive_link). Once downloaded, please transfer them to the `./dataset` directory.
+- The required datasets can be downloaded from this [link](https://drive.google.com/drive/folders/19KhzBk-VbITqaTUqJYe6j4UGu8oleUC_?usp=drive_link). Once downloaded, please unzip and transfer them to the `./dataset` directory.
 
 ### Model Checkpoints
 
-- Download the model checkpoints from this [link](https://drive.google.com/drive/folders/1bMJhmWZNUGmZzrsBTQkDy8JnxjP9iKKV?usp=drive_link) and relocate them to the `./experiments` folder.
+- Download the model checkpoints from this [link](https://drive.google.com/drive/folders/1bMJhmWZNUGmZzrsBTQkDy8JnxjP9iKKV?usp=drive_link) and unzip and transfer them to the `./experiments` folder.
 
 ### Model Inference
 
