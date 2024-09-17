@@ -1,38 +1,14 @@
 # Modified from NAFNet https://github.com/megvii-research/NAFNet
-# ------------------------------------------------------------------------
-# Copyright (c) 2022 megvii-model. All Rights Reserved.
-# ------------------------------------------------------------------------
-# Modified from BasicSR (https://github.com/xinntao/BasicSR)
-# Copyright 2018-2020 BasicSR Authors
-# ------------------------------------------------------------------------
+
 import yaml
 from collections import OrderedDict
 from os import path as osp
+import argparse
+from .dist_util import get_dist_info, init_dist
+import torch
+import random 
+import numpy as np
 
-
-def ordered_yaml():
-    """Support OrderedDict for yaml.
-
-    Returns:
-        yaml Loader and Dumper.
-    """
-    try:
-        from yaml import CDumper as Dumper
-        from yaml import CLoader as Loader
-    except ImportError:
-        from yaml import Dumper, Loader
-
-    _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
-
-    def dict_representer(dumper, data):
-        return dumper.represent_dict(data.items())
-
-    def dict_constructor(loader, node):
-        return OrderedDict(loader.construct_pairs(node))
-
-    Dumper.add_representer(OrderedDict, dict_representer)
-    Loader.add_constructor(_mapping_tag, dict_constructor)
-    return Loader, Dumper
 
 
 def parse(opt_path, is_train=True):
@@ -96,6 +72,83 @@ def parse(opt_path, is_train=True):
 
     return opt
 
+def set_random_seed(seed):
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.cuda.manual_seed(seed)
+
+def parse_options(is_train=True):
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-opt', type=str,default =\
+        './options/demo_options.yml', required=False, help='Path to option YAML file.')
+        
+    parser.add_argument(
+        '--launcher',
+        choices=['none', 'pytorch', 'slurm'],
+        default='none',
+        help='job launcher')
+    parser.add_argument('--local_rank', type=int, default=0)
+
+    parser.add_argument('--input_path', type=str, required=False, help='The path to the input image. For single image inference only.')
+    parser.add_argument('--output_path', type=str, required=False, help='The path to the output image. For single image inference only.')
+    args, unknown = parser.parse_known_args()
+
+    opt = parse(args.opt, is_train=is_train)
+    if args.launcher == 'none':
+        opt['dist'] = False
+        print('Disable distributed.', flush=True)
+    else:
+        opt['dist'] = True
+        if args.launcher == 'slurm' and 'dist_params' in opt:
+            init_dist(args.launcher, **opt['dist_params'])
+        else:
+            init_dist(args.launcher)
+            print('init dist .. ', args.launcher)
+    print(args.launcher)
+    opt['rank'], opt['world_size'] = get_dist_info()
+    print(f'rank: {opt["rank"]}')
+    print(f'ws: {opt["world_size"]}')
+    seed = opt.get('manual_seed')
+    if seed is None:
+        seed = random.randint(1, 10000)
+        opt['manual_seed'] = seed
+    set_random_seed(seed + opt['rank'])
+
+    if args.input_path is not None and args.output_path is not None:
+        opt['img_path'] = {
+            'input_img': args.input_path,
+            'output_img': args.output_path
+        }
+
+    return opt
+
+
+def ordered_yaml():
+    """Support OrderedDict for yaml.
+
+    Returns:
+        yaml Loader and Dumper.
+    """
+    try:
+        from yaml import CDumper as Dumper
+        from yaml import CLoader as Loader
+    except ImportError:
+        from yaml import Dumper, Loader
+
+    _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
+
+    def dict_representer(dumper, data):
+        return dumper.represent_dict(data.items())
+
+    def dict_constructor(loader, node):
+        return OrderedDict(loader.construct_pairs(node))
+
+    Dumper.add_representer(OrderedDict, dict_representer)
+    Loader.add_constructor(_mapping_tag, dict_constructor)
+    return Loader, Dumper
 
 def dict2str(opt, indent_level=1):
     """dict to string for printing options.
@@ -116,3 +169,4 @@ def dict2str(opt, indent_level=1):
         else:
             msg += ' ' * (indent_level * 2) + k + ': ' + str(v) + '\n'
     return msg
+

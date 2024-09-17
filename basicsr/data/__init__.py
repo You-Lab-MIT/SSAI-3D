@@ -17,8 +17,11 @@ from os import path as osp
 from basicsr.data.prefetch_dataloader import PrefetchDataLoader
 from basicsr.utils import get_root_logger, scandir
 from basicsr.utils.dist_util import get_dist_info
+from basicsr.data.ssai3d_dataset import restore_volume, \
+    semi_synthetic_creation, generate_raw_data, generate_zs_dataset
 
-__all__ = ['create_dataset', 'create_dataloader']
+__all__ = ['create_dataset', 'create_dataloader', 'restore_volume', 'semi_synthetic_creation', 'generate_raw_data','generate_zs_dataset']
+
 
 # automatically scan and import dataset modules
 # scan all the files under the data folder with '_dataset' in file names
