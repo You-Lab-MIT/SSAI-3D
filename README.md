@@ -56,7 +56,7 @@ Using the provided network checkpoints, typical run time on a desktop computer i
 
 ### Model Inference
 
-For detailed instructions on conducting model inference, please consult the `./demo/demo.ipynb` file within the demo directory.
+For detailed instructions on conducting model inference, please consult the `./demo/demo_test.ipynb` file within the demo directory.
 
 
 ---
