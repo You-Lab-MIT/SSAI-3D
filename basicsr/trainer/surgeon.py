@@ -121,8 +121,6 @@ class Surgeon(object):
         #         file.write('\n')
         self.make_input_format()
     def stabilize_model(self):
-        # fix all layers except for conv2D and Linear
-        # pass
         for _, p in self.model.net_g.named_parameters():
             p.requires_grad = False
         count = 0

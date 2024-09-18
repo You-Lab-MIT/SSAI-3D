@@ -17,12 +17,12 @@ def restore_volume(raw_pth, rec_pth_xz, rec_pth_yz ):
 
     for i in tqdm(range(dlen1)):
         # raw_slice = cv2.imread(os.path.join(raw_pth, f'{i}.png'))
-        rec_slice1 = cv2.imread(os.path.join(rec_pth_xz, f'{i}.png'))
+        rec_slice1 = cv2.imread(os.path.join(rec_pth_xz, f'{i}.png'), cv2.IMREAD_UNCHANGED)
         # raw_stack.append(raw_slice)
         rec_stack1.append(rec_slice1)
 
     for i in tqdm(range(dlen2)):
-        rec_slice2 = cv2.imread(os.path.join(rec_pth_yz, f'{i}.png'))
+        rec_slice2 = cv2.imread(os.path.join(rec_pth_yz, f'{i}.png'), cv2.IMREAD_UNCHANGED)
         rec_stack2.append(rec_slice2)
 
     # raw_stack_ = np.stack(raw_stack).mean(-1)
@@ -131,8 +131,8 @@ def generate_zs_dataset(input_pth):
     d = 100
     files = random.sample(file_names, 10)
     for file in files:
-        gt_s = cv2.imread(os.path.join(gt_pth, file))
-        lq_s = cv2.imread(os.path.join(lq_pth, file))
+        gt_s = cv2.imread(os.path.join(gt_pth, file), cv2.IMREAD_UNCHANGED)
+        lq_s = cv2.imread(os.path.join(lq_pth, file), cv2.IMREAD_UNCHANGED)
         x = lq_s.shape[0]
         y = lq_s.shape[1]
         gt_s = gt_s[x-d:x+d, y-d:y+d]

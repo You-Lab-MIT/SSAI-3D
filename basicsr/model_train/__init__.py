@@ -22,7 +22,7 @@ from tqdm import tqdm
 # from basicsr.utils.file_client import FileClient
 
 from basicsr.model_train.utils import create_train_val_dataloader, init_loggers, options, parse_options
-
+from basicsr.model_train.net_utils import freeze_layer_v3
 __all__ = ['create_train_val_dataloader',
             'init_loggers', 
             'options',
@@ -120,6 +120,8 @@ def trainer_train(freeze_layers, train_data_pth):
         # model = zest(model)
         logger.info('Surgeon Activated')
         logger.info('*************************************************************************************')
+    
+    model.net_g = freeze_layer_v3(model.net_g, freeze_layers)
     while current_iter <= total_iters:
         train_sampler.set_epoch(epoch)
         prefetcher.reset()
@@ -154,7 +156,7 @@ def trainer_train(freeze_layers, train_data_pth):
             data_time = time.time()
             iter_time = time.time()
             train_data = prefetcher.next()
-        # end of iter
+            
         epoch += 1
 
     # end of epoch
@@ -193,6 +195,24 @@ def restore(input_pth, output_pth, model_pth):
             sr_img = tensor2img([visuals['result']])
             imwrite(sr_img, os.path.join(output_pth, img_path))
             pbar.update(1)
-            # if count % 20 == 0:
-            #     print(f'{count}th inference {img_path} .. finished. saved to {output_pth}')
     return 
+
+
+if __name__ == '__main__':
+    rank = [(60, 0.06589828431606293),
+        (218, 0.06676021218299866),
+        (169, 0.06754997372627258),
+        (183, 0.06897436827421188),
+        (30, 0.06897670775651932),
+        (226, 0.07017166167497635),
+        (12, 0.07034114003181458),
+        (93, 0.07054248452186584),
+        (137, 0.0707058534026146),
+        (17, 0.0707860216498375),
+        (21, 0.07085736840963364),
+        (201, 0.07120496034622192),
+        (15, 0.07125891745090485),
+        (7, 0.07217205315828323),
+        (34, 0.07227000594139099)]
+    data_pth = '/home/youlab/Desktop/workspace/kunzan/SSAI-3D/demo/demo_dataset'
+    trainer_train(rank, data_pth)

@@ -28,7 +28,8 @@ def parse_options(is_train=True):
     parser.add_argument(
         '-opt', type=str,default =\
         './options/demo_options.yml', required=False, help='Path to option YAML file.')
-        
+        # './options/demo_options.yml',
+        # '/home/youlab/Desktop/workspace/kunzan/SSAI-3D/demo/options/demo_options.yml'
     parser.add_argument(
         '--launcher',
         choices=['none', 'pytorch', 'slurm'],

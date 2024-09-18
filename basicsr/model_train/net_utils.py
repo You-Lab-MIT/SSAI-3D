@@ -2,7 +2,7 @@
 # from utils.get_layer import get_whole_layers
 import torch 
 from typing import List
-
+import numpy as np
 def freeze_layer(net, layer_id):
     for l in net.parameters():
         l.requires_grad = False
@@ -40,8 +40,25 @@ def freeze_layer_v2(net, layer,linear_layer):
             param.requires_grad = False
     return net
 
-def freeze_layer_nafnet(net, layer, linear_layer):
-    pass
+def freeze_layer_v3(neural_network, layer_idx):
+    for _, p in neural_network.named_parameters():
+        p.requires_grad = False
+
+    li = [i[0] for i in layer_idx[:20]]
+    count = 0
+    idxs = []
+    for idx, (_, p) in enumerate(neural_network.named_parameters()):
+        if p.numel()> 50000:
+            count += 1
+            idxs.append(idx)
+        if count in li:
+            p.requires_grad = True
+    outputs = np.arange(idx-20,idx).tolist()
+    for idx, (_, p) in enumerate(neural_network.named_parameters()):
+        if idx in outputs or idx in idxs[:30] or idx in idxs[-30:]:
+            p.requires_grad = True
+    return neural_network
+
 
 def get_weights(net, layer):
     weight_dic = {}
