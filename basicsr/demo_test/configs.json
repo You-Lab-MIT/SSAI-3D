@@ -1,0 +1,16 @@
+{   "Endometrium_THG" : {
+        "model_pth" : "../experiments/pretrained/endometrium/CH1",
+        "dataset_pth" : "../dataset/endometrium/CH1"
+    },
+    "Endometrium_SHG" : {
+        "model_pth" : "../experiments/pretrained/endometrium/CH2",
+        "dataset_pth" : "../dataset/endometrium/CH2"
+    },
+    "Endometrium_FAD" : {
+        "model_pth" : "../experiments/pretrained/endometrium/CH3",
+        "dataset_pth" : "../dataset/endometrium/CH3"
+    },  
+    "BBB_NAD(P)H" : {
+        "model_pth" : "../experiments/pretrained/BBB/",
+        "dataset_pth" : "../dataset/BBB/"
+    }}
