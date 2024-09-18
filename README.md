@@ -42,7 +42,7 @@ python setup.py develop --no_cuda_ext
 ```
 
 ---
-## Demonstration
+## Demonstration -- Testing
 
 Using the provided network checkpoints, typical run time on a desktop computer is estimated to be around 5 minutes.
 
@@ -57,3 +57,21 @@ Using the provided network checkpoints, typical run time on a desktop computer i
 ### Model Inference
 
 For detailed instructions on conducting model inference, please consult the `./demo/demo.ipynb` file within the demo directory.
+
+
+---
+## Demonstration -- Training
+
+Using the pre-trained NAFNet weights, typical fine-tuning time on a desktop computer is estimated to be around 5~30 minutes, depending on the dataset.
+
+### Data Preparation 
+
+- The required anisotropic raw dataset can be downloaded from [here](https://drive.google.com/file/d/1p3CUWhaSJXAA_9k8p4nRrhjBmbegQ-vJ/view?usp=sharing). Once downloaded, please transfer it to `~/SSAI-3D/demo` directory.
+
+### Pre-trained Model Checkpoints
+
+- Download the pre-trained model checkpoint from [here](https://drive.google.com/file/d/14D4V4raNYIOhETfcuuLI3bGLB-OYIv6X/view), and transfer it to `~/SSAI-3D/demo/experiments/pretrained_models`.
+
+### Model Training
+
+For detailed instructions on conducting model inference, please consult the `./demo/demo_train.ipynb` file within the demo directory.

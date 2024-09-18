@@ -66,10 +66,10 @@ train:
 
   scheduler:
     type: TrueCosineAnnealingLR
-    T_max: 100000
+    T_max: 70000
     eta_min: !!float 1e-7
 
-  total_iter: 100000
+  total_iter: 70000
   warmup_iter: -1 # no warm up
 
   # losses

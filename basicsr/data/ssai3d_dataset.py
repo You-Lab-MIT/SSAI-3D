@@ -5,6 +5,8 @@ import tifffile
 from basicsr.utils.gf import *
 from basicsr.utils.dataset import normalize, resize
 import random
+from skimage import exposure
+from tqdm import tqdm 
 
 def restore_volume(raw_pth, rec_pth_xz, rec_pth_yz ):
     raw_stack = []
@@ -13,23 +15,26 @@ def restore_volume(raw_pth, rec_pth_xz, rec_pth_yz ):
     dlen1 = len(os.listdir(raw_pth))
     dlen2 = len(os.listdir(rec_pth_yz))
 
-    for i in range(dlen1):
-        raw_slice = cv2.imread(os.path.join(raw_pth, f'{i}.png'))
+    for i in tqdm(range(dlen1)):
+        # raw_slice = cv2.imread(os.path.join(raw_pth, f'{i}.png'))
         rec_slice1 = cv2.imread(os.path.join(rec_pth_xz, f'{i}.png'))
-        raw_stack.append(raw_slice)
+        # raw_stack.append(raw_slice)
         rec_stack1.append(rec_slice1)
-    for i in range(dlen2):
+
+    for i in tqdm(range(dlen2)):
         rec_slice2 = cv2.imread(os.path.join(rec_pth_yz, f'{i}.png'))
         rec_stack2.append(rec_slice2)
 
-    raw_stack_ = np.stack(raw_stack).mean(-1)
+    # raw_stack_ = np.stack(raw_stack).mean(-1)
     rec_stack_1 = np.stack(rec_stack1).mean(-1)
     rec_stack_2 = np.stack(rec_stack2).mean(-1)
-    
-    raw_stack_, rec_stack_1, rec_stack_2 = raw_stack_.astype(np.float64), rec_stack_1.astype(np.float64), rec_stack_2.astype(np.float64)
+    # raw_stack_ = raw_stack_.astype(np.float64), 
+    rec_stack_1, rec_stack_2 = rec_stack_1.astype(np.float64), rec_stack_2.astype(np.float64)
+    # print('done float64')
     tmp = np.swapaxes(rec_stack_2,0,2 )
     res = (tmp + rec_stack_1)/2
-    return raw_stack_, rec_stack_1, rec_stack_2, res
+    # raw_stack_, 
+    return rec_stack_1, rec_stack_2, res
 
 # def semi_synthetic_creation():
 #     pass
@@ -143,3 +148,6 @@ def generate_zs_dataset(input_pth):
         cv2.imwrite(f'./demo_dataset/zs_gt/{file}', gt_s)
 
 
+def adjust_contrast(image, p_low=2, p_high=98.8):
+    v_min, v_max = np.percentile(image, (p_low, p_high))  # Calculate intensity bounds
+    return exposure.rescale_intensity(image, in_range=(v_min, v_max))

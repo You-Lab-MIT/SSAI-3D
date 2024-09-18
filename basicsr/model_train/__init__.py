@@ -2,6 +2,8 @@ import torch.nn as nn
 import torch
 import random
 import cv2
+import datetime
+
 import numpy as np
 import os
 from os import path as osp
@@ -15,6 +17,8 @@ from basicsr.utils import (MessageLogger, check_resume, get_env_info,
                            get_root_logger, get_time_str, init_tb_logger,
                            init_wandb_logger, make_exp_dirs, mkdir_and_rename,
                            set_random_seed)
+from basicsr.utils import FileClient, imfrombytes, img2tensor, padding, tensor2img, imwrite
+from tqdm import tqdm
 # from basicsr.utils.file_client import FileClient
 
 from basicsr.model_train.utils import create_train_val_dataloader, init_loggers, options, parse_options
@@ -113,7 +117,7 @@ def trainer_train(freeze_layers, train_data_pth):
     epoch = start_epoch    
     if opt['ZEST']:
         logger.info('*************************************************************************************')
-        model = zest(model)
+        # model = zest(model)
         logger.info('Surgeon Activated')
         logger.info('*************************************************************************************')
     while current_iter <= total_iters:
@@ -172,20 +176,23 @@ def restore(input_pth, output_pth, model_pth):
     model = create_model(opt)
     for n, p in model.net_g.named_parameters():
         p.requires_grad = False
-    for count, img_path in enumerate(os.listdir(input_pth)):
-        img_bytes = file_client.get(os.path.join(input_pth, img_path), None)
-        img = imfrombytes(img_bytes, float32=True)
-        img = img2tensor(img, bgr2rgb=True, float32=True)
-        opt['dist'] = False
-        model.feed_data(data={'lq': img.unsqueeze(dim=0)})
-        if model.opt['val'].get('grids', False):
-            model.grids()
-        if model.opt['val'].get('grids', False):
-            model.grids_inverse()
-        model.test()
-        visuals = model.get_current_visuals()
-        sr_img = tensor2img([visuals['result']])
-        imwrite(sr_img, os.path.join(output_pth, img_path))
-        if count % 20 == 0:
-            print(f'{count}th inference {img_path} .. finished. saved to {output_pth}')
+    total = len(os.listdir(input_pth))
+    with tqdm(total = total) as pbar:
+        for count, img_path in (enumerate(os.listdir(input_pth))):
+            img_bytes = file_client.get(os.path.join(input_pth, img_path), None)
+            img = imfrombytes(img_bytes, float32=True)
+            img = img2tensor(img, bgr2rgb=True, float32=True)
+            opt['dist'] = False
+            model.feed_data(data={'lq': img.unsqueeze(dim=0)})
+            if model.opt['val'].get('grids', False):
+                model.grids()
+            if model.opt['val'].get('grids', False):
+                model.grids_inverse()
+            model.test()
+            visuals = model.get_current_visuals()
+            sr_img = tensor2img([visuals['result']])
+            imwrite(sr_img, os.path.join(output_pth, img_path))
+            pbar.update(1)
+            # if count % 20 == 0:
+            #     print(f'{count}th inference {img_path} .. finished. saved to {output_pth}')
     return 
