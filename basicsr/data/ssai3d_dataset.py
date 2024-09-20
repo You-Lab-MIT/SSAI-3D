@@ -25,21 +25,53 @@ def restore_volume(raw_pth, rec_pth_xz, rec_pth_yz ):
         rec_slice2 = cv2.imread(os.path.join(rec_pth_yz, f'{i}.png'), cv2.IMREAD_UNCHANGED)
         rec_stack2.append(rec_slice2)
 
-    # raw_stack_ = np.stack(raw_stack).mean(-1)
     rec_stack_1 = np.stack(rec_stack1).mean(-1)
     rec_stack_2 = np.stack(rec_stack2).mean(-1)
-    # raw_stack_ = raw_stack_.astype(np.float64), 
     rec_stack_1, rec_stack_2 = rec_stack_1.astype(np.float64), rec_stack_2.astype(np.float64)
-    # print('done float64')
     tmp = np.swapaxes(rec_stack_2,0,2 )
     res = (tmp + rec_stack_1)/2
-    # raw_stack_, 
     return rec_stack_1, rec_stack_2, res
 
-# def semi_synthetic_creation():
-#     pass
+def denoised_semi_synthetic_creation(input_pth, output_pth,
+    kernel_num = 3, downsample_rate = 5,  rotation = False):
+    kernel_lst = []
+    res_lst = [[] for _ in range(kernel_num)]
+    gt_lst = [[] for _ in range(kernel_num)]
+    
+    for idx, std in enumerate(np.arange(3,101,2)):
+        if idx >= kernel_num:
+            break
+        kernel_lst.append(gk_simple(51, std))
+    
+    gt_pth = os.path.join(output_pth, 'denoised_gt_train')
+    lq_pth = os.path.join(output_pth, 'denoised_lq_train')
+    os.makedirs(gt_pth, exist_ok = True)
+    os.makedirs(lq_pth, exist_ok = True)
 
-def semi_synthetic_creation(raw_tif_pth, save_pth, kernel_num = 3, project_depth = 5, \
+    xy_slices = len(os.listdir(input_pth))
+    for slice_idx in range(xy_slices):
+        raw_slice = cv2.imread(os.path.join(input_pth, f'{slice_idx}.png')).mean(-1)
+        for idx, k in enumerate(kernel_lst):
+
+            conved_slice = signal.fftconvolve(raw_slice, k, mode = 'same')
+            conved_slice = resize(conved_slice, downsample_rate, raw_slice)
+            res_lst[idx].append(conved_slice)
+            gt_lst[idx].append(raw_slice)
+            assert conved_slice.shape == raw_slice.shape
+            # cv2.imwrite(os.path.join(output_pth,f'{slice_idx}' ), slice)
+    lqstacks = [np.stack(s) for s in res_lst]
+    gtstacks = [np.stack(s) for s in gt_lst]
+    for idx, stack in enumerate(lqstacks):
+        lqstack = normalize(stack)
+        gtstack = normalize(gtstacks[idx])
+        for slice_idx, lq_slice in enumerate(lqstack):
+            gt_slice = gtstack[slice_idx]
+            cv2.imwrite(os.path.join(gt_pth, f'{idx}_{slice_idx}.png'), gt_slice)
+            cv2.imwrite(os.path.join(lq_pth, f'{idx}_{slice_idx}.png'), lq_slice)
+    if rotation:
+        pass
+    return 
+def semi_synthetic_creation(raw_tif_pth, save_pth, kernel_num = 7, project_depth = 5, \
     downsample_rate = 5,  rotation = False):
 
     raw_data = tifffile.imread(raw_tif_pth)
@@ -94,24 +126,59 @@ def semi_synthetic_creation(raw_tif_pth, save_pth, kernel_num = 3, project_depth
         pass
     return 
 
+# def generate_test(raw_pth):
+#     raw_data = tifffile.imread(raw_pth)
+#     raw_data = normalize(raw_data)
+#     path_xz = os.path.join(save_pth,'test_xz')
+#     path_yz = os.path.join(save_pth,'test_yz')
+
+#     os.makedirs(path_xz, exist_ok=True)
+#     os.makedirs(path_yz, exist_ok=True)
+    
+#     assert len(raw_data.shape) == 3
+#     xz_len = raw_data.shape[1]
+#     yz_len = raw_data.shape[-1]
+
+#     for idx in range(yz_len):
+#         slice = raw_data[:,:,idx]
+#         slice = cv2.resize(slice, (raw_data.shape[1], raw_data.shape[0]*dr))
+#         cv2.imwrite(os.path.join(path_xz, f'{idx}.png'), slice)
+    
+#     for idx in range(xz_len):
+#         slice = raw_data[:,idx,:]
+#         slice = cv2.resize(slice, (raw_data.shape[-1], raw_data.shape[0]*dr))
+#         cv2.imwrite(os.path.join(path_yz, f'{idx}.png'), slice)    
+#     pass
+
+
 def generate_raw_data(raw_pth, save_pth, dr):
     raw_data = tifffile.imread(raw_pth)
     raw_data = normalize(raw_data)
     path_xz = os.path.join(save_pth,'test_xz')
     path_yz = os.path.join(save_pth,'test_yz')
+    path_xy = os.path.join(save_pth,'test_xy')
 
+    raw_data = raw_data[:80,:400,:500]
     os.makedirs(path_xz, exist_ok=True)
     os.makedirs(path_yz, exist_ok=True)
+    os.makedirs(path_xy, exist_ok=True)
     
     assert len(raw_data.shape) == 3
     xz_len = raw_data.shape[1]
     yz_len = raw_data.shape[-1]
+    xy_len = raw_data.shape[0]
 
     for idx in range(yz_len):
         slice = raw_data[:,:,idx]
         slice = cv2.resize(slice, (raw_data.shape[1], raw_data.shape[0]*dr))
         cv2.imwrite(os.path.join(path_xz, f'{idx}.png'), slice)
     
+
+    for idx in range(xy_len):
+        slice = raw_data[:,:,idx]
+        slice = cv2.resize(slice, (raw_data.shape[1], raw_data.shape[0]*dr))
+        cv2.imwrite(os.path.join(path_xy, f'{idx}.png'), slice)
+
     for idx in range(xz_len):
         slice = raw_data[:,idx,:]
         slice = cv2.resize(slice, (raw_data.shape[-1], raw_data.shape[0]*dr))

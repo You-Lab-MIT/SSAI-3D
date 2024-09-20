@@ -31,11 +31,15 @@ __all__ = ['create_train_val_dataloader',
 
 
 
-def trainer_train(freeze_layers, train_data_pth):
+def trainer_train(freeze_layers, train_data_pth,train_data_pth_lq=None ):
     # parse options, set distributed setting, set ramdom seed
     opt = parse_options(is_train=True)
-    opt['datasets']['train']['dataroot_gt'] = f'{train_data_pth}/gt'
-    opt['datasets']['train']['dataroot_lq'] = f'{train_data_pth}/lq'
+    if train_data_pth_lq == None:
+        opt['datasets']['train']['dataroot_gt'] = f'{train_data_pth}/gt'
+        opt['datasets']['train']['dataroot_lq'] = f'{train_data_pth}/lq'
+    else:
+        opt['datasets']['train']['dataroot_gt'] = train_data_pth
+        opt['datasets']['train']['dataroot_lq'] = train_data_pth_lq
     torch.backends.cudnn.benchmark = True
     # torch.backends.cudnn.deterministic = True
 
@@ -196,6 +200,8 @@ def restore(input_pth, output_pth, model_pth, denoise = False):
             model.test()
             visuals = model.get_current_visuals()
             sr_img = tensor2img([visuals['result']])
+            if sr_img.shape == 4:
+                sr_img = sr_img.mean(-1)
             imwrite(sr_img, os.path.join(output_pth, img_path))
             pbar.update(1)
     return 

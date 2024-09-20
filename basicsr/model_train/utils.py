@@ -23,13 +23,54 @@ from basicsr.utils.dist_util import get_dist_info, init_dist
 from basicsr.utils.options import dict2str, parse
 
 
+def parse_options_denoise(is_train=True):
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-opt', type=str,default =\
+        './options/denoise.yml', required=False, help='Path to option YAML file.')
+        # './options/demo_options.yml',
+    parser.add_argument(
+        '--launcher',
+        choices=['none', 'pytorch', 'slurm'],
+        default='none',
+        help='job launcher')
+    parser.add_argument('--local_rank', type=int, default=0)
+
+    parser.add_argument('--input_path', type=str, required=False, help='The path to the input image. For single image inference only.')
+    parser.add_argument('--output_path', type=str, required=False, help='The path to the output image. For single image inference only.')
+    args, unknown = parser.parse_known_args()
+    opt = parse(args.opt, is_train=is_train)
+    if args.launcher == 'none':
+        opt['dist'] = False
+        print('Disable distributed.', flush=True)
+    else:
+        opt['dist'] = True
+        if args.launcher == 'slurm' and 'dist_params' in opt:
+            init_dist(args.launcher, **opt['dist_params'])
+        else:
+            init_dist(args.launcher)
+            print('init dist .. ', args.launcher)
+    print(args.launcher)
+    opt['rank'], opt['world_size'] = get_dist_info()
+    seed = opt.get('manual_seed')
+    if seed is None:
+        seed = random.randint(1, 10000)
+        opt['manual_seed'] = seed
+    set_random_seed(seed + opt['rank'])
+
+    if args.input_path is not None and args.output_path is not None:
+        opt['img_path'] = {
+            'input_img': args.input_path,
+            'output_img': args.output_path
+        }
+
+    return opt
 def parse_options(is_train=True):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-opt', type=str,default =\
         './options/demo_options.yml', required=False, help='Path to option YAML file.')
         # './options/demo_options.yml',
-        # '/home/youlab/Desktop/workspace/kunzan/SSAI-3D/demo/options/demo_options.yml'
     parser.add_argument(
         '--launcher',
         choices=['none', 'pytorch', 'slurm'],
