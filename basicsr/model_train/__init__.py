@@ -21,12 +21,12 @@ from basicsr.utils import FileClient, imfrombytes, img2tensor, padding, tensor2i
 from tqdm import tqdm
 # from basicsr.utils.file_client import FileClient
 
-from basicsr.model_train.utils import create_train_val_dataloader, init_loggers, options, parse_options
+from basicsr.model_train.utils import create_train_val_dataloader, init_loggers, options, parse_options, parse_options_denoise
 from basicsr.model_train.net_utils import freeze_layer_v3
 __all__ = ['create_train_val_dataloader',
             'init_loggers', 
             'options',
-            'parse_options', 'restore']
+            'parse_options', 'restore', 'parse_options_denoise']
 
 
 
@@ -169,9 +169,12 @@ def trainer_train(freeze_layers, train_data_pth):
     if tb_logger:
         tb_logger.close()
 
-def restore(input_pth, output_pth, model_pth):
+def restore(input_pth, output_pth, model_pth, denoise = False):
     os.makedirs(output_pth, exist_ok = True)
-    opt = parse_options(is_train=False)
+    if denoise:
+        opt = parse_options_denoise(is_train=False)
+    else:
+        opt = parse_options(is_train=False)
     opt['num_gpu'] = torch.cuda.device_count()
     file_client = FileClient('disk')
     opt['path']['pretrain_network_g'] = model_pth
