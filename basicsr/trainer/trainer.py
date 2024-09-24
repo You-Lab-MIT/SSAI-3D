@@ -21,13 +21,15 @@ class SurgeonTrainer(nn.Module):
             nn.Dropout(0.2),
             nn.GELU(),
             nn.Linear(64,1),)
-        
+        self.mlp.load_state_dict(torch.load('./experiments/sur.pt', weights_only=True))
+
     def forward(self, x1, x2):
         x1 = self.mlp(x1)
         x2 = self.mlp(x2)
         return x1, x2
     
     def forward_all(self, input_layers):
+        self.mlp.eval()
         tmp_dict = []
         for layer_idx, zs_value in input_layers.items():
             assert zs_value.shape[0] == self.input_dims
