@@ -173,7 +173,7 @@ def trainer_train(freeze_layers, train_data_pth,train_data_pth_lq=None ):
     if tb_logger:
         tb_logger.close()
 
-def restore(input_pth, output_pth, model_pth, denoise = False):
+def restore(input_pth, output_pth, model_pth, denoise = False, dtype = np.uint8):
     os.makedirs(output_pth, exist_ok = True)
     if denoise:
         opt = parse_options_denoise(is_train=False)
@@ -189,7 +189,7 @@ def restore(input_pth, output_pth, model_pth, denoise = False):
     with tqdm(total = total) as pbar:
         for count, img_path in (enumerate(os.listdir(input_pth))):
             img_bytes = file_client.get(os.path.join(input_pth, img_path), None)
-            img = imfrombytes(img_bytes, float32=True)
+            img = imfrombytes(img_bytes, float32=True, dtype = dtype)
             img = img2tensor(img, bgr2rgb=True, float32=True)
             opt['dist'] = False
             model.feed_data(data={'lq': img.unsqueeze(dim=0)})

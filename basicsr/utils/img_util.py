@@ -107,7 +107,7 @@ def tensor2img(tensor, rgb2bgr=True, out_type=np.uint16, min_max=(0, 1)):
     return result
 
 
-def imfrombytes(content, flag='color', float32=False):
+def imfrombytes(content, flag='color', float32=False, dtype = np.uint8):
     """Read an image from bytes.
 
     Args:
@@ -130,7 +130,11 @@ def imfrombytes(content, flag='color', float32=False):
         raise Exception('None .. !!!')
     img = cv2.imdecode(img_np, imread_flags[flag])
     if float32:
-        img = img.astype(np.float32) / 255.
+        img = img.astype(np.float32)
+    if dtype == np.uint8:
+        img = img / 255.
+    elif dtype == np.uint16:
+        img = img / 65535.
     return img
 
 def padding(img_lq, img_gt, gt_size):
