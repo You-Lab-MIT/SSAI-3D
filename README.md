@@ -42,9 +42,28 @@ python setup.py develop --no_cuda_ext
 ```
 
 ---
+
+## Demonstration -- General Testing
+
+
+**Runtime Estimate**  
+Using the provided network checkpoints, the typical runtime on a desktop computer is approximately **1 minute**.
+
+### Data Preparation 
+Please prepare own data, in a folder of sequence of two dimensional any-bit tiff or png files
+
+### Model Checkpoints
+Please download the pre-trained, fine-tuned model from [here](https://drive.google.com/file/d/1mhpZ00h3UvXvTfsA_feYd1B2sWD-06uY/view?usp=sharing), and move it to the following directory:  
+```
+./experiments/pretrained_models
+```
+
+
+---
 ## Demonstration -- Testing
 
-Using the provided network checkpoints, typical run time on a desktop computer is estimated to be around 5 minutes.
+**Runtime Estimate**  
+Using the provided network checkpoints, typical run time on a desktop computer is estimated to be around **5 minutes**.
 
 ### Data Preparation 
 
@@ -62,7 +81,7 @@ For detailed instructions on conducting model inference, please consult the `./d
 ---
 ## Demonstration -- Training
 
-Using the pre-trained NAFNet weights, typical fine-tuning time on a desktop computer is estimated to be around 5~30 minutes, depending on the dataset.
+Using the pre-trained NAFNet weights, typical fine-tuning time on a desktop computer is estimated to be around **5~30 minutes**, depending on the dataset.
 
 ### Data Preparation 
 
