@@ -131,10 +131,11 @@ def imfrombytes(content, flag='color', float32=False, dtype = np.uint8):
     img = cv2.imdecode(img_np, imread_flags[flag])
     if float32:
         img = img.astype(np.float32)
-    if dtype == np.uint8:
-        img = img / 255.
-    elif dtype == np.uint16:
-        img = img / 65535.
+    # if dtype == np.uint8:
+    #     img = img / 255.
+    # elif dtype == np.uint16:
+    #     img = img / 65535.
+    img = img/img.max()
     return img
 
 def padding(img_lq, img_gt, gt_size):
