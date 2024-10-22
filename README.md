@@ -96,3 +96,11 @@ Using the pre-trained NAFNet weights, typical fine-tuning time on a desktop comp
 ### Model Training
 
 For detailed instructions on conducting model inference, please consult the `./demo/demo_train.ipynb` file within the demo directory.
+
+
+### Results 
+
+We have provided a training demo using an example dataset available [here](https://zenodo.org/records/7882519). This dataset consists of 16-bit unsigned integer images of mouse brain neurons. Running the demo will yield results as shown below.
+
+
+<img width="1012" alt="image" src="./resource/output.png">
