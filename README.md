@@ -104,3 +104,4 @@ We have provided a training demo using an example dataset available [here](https
 
 
 <img width="1012" alt="image" src="./resource/output.png">
+<img width="1012" alt="image" src="./resource/output_.png">
