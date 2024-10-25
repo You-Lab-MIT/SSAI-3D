@@ -43,11 +43,11 @@ python setup.py develop --no_cuda_ext
 
 ---
 
-## Demonstration -- General Testing
+## Demonstration -- General Testing uint16 dataset
 
 
 **Runtime Estimate**  
-Using the provided network checkpoints, the typical runtime on a desktop computer is approximately **1 minute**.
+Using the provided network checkpoints, the typical runtime for an uint16 dataset on a desktop computer is approximately **1 minute**.
 
 ### Data Preparation 
 Please prepare own data, in a folder of sequence of two dimensional any-bit tiff or png files
@@ -60,10 +60,10 @@ Please download the pre-trained, fine-tuned model from [here](https://drive.goog
 
 
 ---
-## Demonstration -- Testing
+## Demonstration -- Testing uint16
 
 **Runtime Estimate**  
-Using the provided network checkpoints, typical run time on a desktop computer is estimated to be around **5 minutes**.
+Using the provided network checkpoints, typical run time to restore resolution for an uint16 dataset on a desktop computer is estimated to be around **5 minutes**.
 
 ### Data Preparation 
 
@@ -79,9 +79,9 @@ For detailed instructions on conducting model inference, please consult the `./d
 
 
 ---
-## Demonstration -- Training
+## Demonstration -- Training uint16
 
-Using the pre-trained NAFNet weights, typical fine-tuning time on a desktop computer is estimated to be around **5~30 minutes**, depending on the dataset.
+Using the pre-trained NAFNet weights, typical fine-tuning for an uint16 dataset on a desktop computer is estimated to be around **5~30 minutes**.
 
 ### Data Preparation 
 
