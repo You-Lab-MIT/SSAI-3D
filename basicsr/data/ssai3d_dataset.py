@@ -7,6 +7,7 @@ from basicsr.utils.dataset import normalize, resize
 import random
 from skimage import exposure
 from tqdm import tqdm 
+import tifffile
 
 def restore_volume(raw_pth, rec_pth_xz, rec_pth_yz ):
     raw_stack = []
@@ -16,13 +17,12 @@ def restore_volume(raw_pth, rec_pth_xz, rec_pth_yz ):
     dlen2 = len(os.listdir(rec_pth_yz))
 
     for i in tqdm(range(dlen1)):
-        # raw_slice = cv2.imread(os.path.join(raw_pth, f'{i}.png'))
-        rec_slice1 = cv2.imread(os.path.join(rec_pth_xz, f'{i}.png'), cv2.IMREAD_UNCHANGED)
+        rec_slice1 = tifffile.imread(os.path.join(rec_pth_xz, f'{i}.tiff'))
         # raw_stack.append(raw_slice)
         rec_stack1.append(rec_slice1)
 
     for i in tqdm(range(dlen2)):
-        rec_slice2 = cv2.imread(os.path.join(rec_pth_yz, f'{i}.png'), cv2.IMREAD_UNCHANGED)
+        rec_slice2 = tifffile.imread(os.path.join(rec_pth_yz, f'{i}.tiff'))
         rec_stack2.append(rec_slice2)
 
     rec_stack_1 = np.stack(rec_stack1).mean(-1)
@@ -50,7 +50,7 @@ def denoised_semi_synthetic_creation(input_pth, output_pth,
 
     xy_slices = len(os.listdir(input_pth))
     for slice_idx in range(xy_slices):
-        raw_slice = cv2.imread(os.path.join(input_pth, f'{slice_idx}.png')).mean(-1)
+        raw_slice = tifffile.imread(os.path.join(input_pth, f'{slice_idx}.tiff')).mean(-1)
         for idx, k in enumerate(kernel_lst):
 
             conved_slice = signal.fftconvolve(raw_slice, k, mode = 'same')
@@ -66,8 +66,8 @@ def denoised_semi_synthetic_creation(input_pth, output_pth,
         gtstack = normalize(gtstacks[idx])
         for slice_idx, lq_slice in enumerate(lqstack):
             gt_slice = gtstack[slice_idx]
-            cv2.imwrite(os.path.join(gt_pth, f'{idx}_{slice_idx}.png'), gt_slice)
-            cv2.imwrite(os.path.join(lq_pth, f'{idx}_{slice_idx}.png'), lq_slice)
+            tifffile.imwrite(os.path.join(gt_pth, f'{idx}_{slice_idx}.tiff'), gt_slice)
+            tifffile.imwrite(os.path.join(lq_pth, f'{idx}_{slice_idx}.tiff'), lq_slice)
     if rotation:
         pass
     return 
@@ -104,8 +104,8 @@ def semi_synthetic_creation(raw_tif_pth, save_pth, kernel_num = 7, project_depth
     for idx, stack in enumerate(stacks):
         stack = normalize(stack)
         for slice_idx, slice in enumerate(stack):
-            cv2.imwrite(os.path.join(gt_pth, f'{idx}_{slice_idx}.png'), raw_data[slice_idx])
-            cv2.imwrite(os.path.join(lq_pth, f'{idx}_{slice_idx}.png'), slice)
+            tifffile.imwrite(os.path.join(gt_pth, f'{idx}_{slice_idx}.tiff'), raw_data[slice_idx])
+            tifffile.imwrite(os.path.join(lq_pth, f'{idx}_{slice_idx}.tiff'), slice)
     
     res_lst = [[] for _ in range(kernel_num)]
     for slice_idx in range(slices):
@@ -120,8 +120,8 @@ def semi_synthetic_creation(raw_tif_pth, save_pth, kernel_num = 7, project_depth
     for idx, stack in enumerate(stacks):
         stack = normalize(stack)
         for slice_idx, slice in enumerate(stack):
-            cv2.imwrite(os.path.join(gt_pth, f'{idx}_{slice_idx}_{proj_idx}.png'), np.amax(raw_data[slice_idx * proj_idx:(slice_idx+1) * proj_idx], 0))
-            cv2.imwrite(os.path.join(lq_pth, f'{idx}_{slice_idx}_{proj_idx}.png'), slice)
+            tifffile.imwrite(os.path.join(gt_pth, f'{idx}_{slice_idx}_{proj_idx}.tiff'), np.amax(raw_data[slice_idx * proj_idx:(slice_idx+1) * proj_idx], 0))
+            tifffile.imwrite(os.path.join(lq_pth, f'{idx}_{slice_idx}_{proj_idx}.tiff'), slice)
     if rotation:
         pass
     return 
@@ -142,18 +142,19 @@ def semi_synthetic_creation(raw_tif_pth, save_pth, kernel_num = 7, project_depth
 #     for idx in range(yz_len):
 #         slice = raw_data[:,:,idx]
 #         slice = cv2.resize(slice, (raw_data.shape[1], raw_data.shape[0]*dr))
-#         cv2.imwrite(os.path.join(path_xz, f'{idx}.png'), slice)
+#         cv2.imwrite(os.path.join(path_xz, f'{idx}.tiff'), slice)
     
 #     for idx in range(xz_len):
 #         slice = raw_data[:,idx,:]
 #         slice = cv2.resize(slice, (raw_data.shape[-1], raw_data.shape[0]*dr))
-#         cv2.imwrite(os.path.join(path_yz, f'{idx}.png'), slice)    
+#         cv2.imwrite(os.path.join(path_yz, f'{idx}.tiff'), slice)    
 #     pass
 
 
 def generate_raw_data(raw_pth, save_pth, dr):
     raw_data = tifffile.imread(raw_pth)
     raw_data = normalize(raw_data)
+    print(raw_data.dtype)
     path_xz = os.path.join(save_pth,'test_xz')
     path_yz = os.path.join(save_pth,'test_yz')
     path_xy = os.path.join(save_pth,'test_xy')
@@ -171,18 +172,18 @@ def generate_raw_data(raw_pth, save_pth, dr):
     for idx in range(yz_len):
         slice = raw_data[:,:,idx]
         slice = cv2.resize(slice, (raw_data.shape[1], raw_data.shape[0]*dr))
-        cv2.imwrite(os.path.join(path_xz, f'{idx}.png'), slice)
+        tifffile.imwrite(os.path.join(path_xz, f'{idx}.tiff'), slice)
     
 
     for idx in range(xy_len):
         slice = raw_data[:,:,idx]
         slice = cv2.resize(slice, (raw_data.shape[1], raw_data.shape[0]*dr))
-        cv2.imwrite(os.path.join(path_xy, f'{idx}.png'), slice)
+        tifffile.imwrite(os.path.join(path_xy, f'{idx}.tiff'), slice)
 
     for idx in range(xz_len):
         slice = raw_data[:,idx,:]
         slice = cv2.resize(slice, (raw_data.shape[-1], raw_data.shape[0]*dr))
-        cv2.imwrite(os.path.join(path_yz, f'{idx}.png'), slice)
+        tifffile.imwrite(os.path.join(path_yz, f'{idx}.tiff'), slice)
     pass
 
 def generate_zs_dataset(input_pth):
@@ -198,8 +199,8 @@ def generate_zs_dataset(input_pth):
     d = 100
     files = random.sample(file_names, 10)
     for file in files:
-        gt_s = cv2.imread(os.path.join(gt_pth, file), cv2.IMREAD_UNCHANGED)
-        lq_s = cv2.imread(os.path.join(lq_pth, file), cv2.IMREAD_UNCHANGED)
+        gt_s = tifffile.imread(os.path.join(gt_pth, file))
+        lq_s = tifffile.imread(os.path.join(lq_pth, file))
         x = lq_s.shape[0]
         y = lq_s.shape[1]
         gt_s = gt_s[x-d:x+d, y-d:y+d]
@@ -211,8 +212,8 @@ def generate_zs_dataset(input_pth):
         lq_s = lq_s/lq_s.max()
         lq_s = lq_s * 255
         lq_s = lq_s.astype(np.uint8)
-        cv2.imwrite(f'./demo_dataset/zs_lq/{file}', lq_s)
-        cv2.imwrite(f'./demo_dataset/zs_gt/{file}', gt_s)
+        tifffile.imwrite(f'./demo_dataset/zs_lq/{file}', lq_s)
+        tifffile.imwrite(f'./demo_dataset/zs_gt/{file}', gt_s)
 
 
 def adjust_contrast(image, p_low=2, p_high=98.8):

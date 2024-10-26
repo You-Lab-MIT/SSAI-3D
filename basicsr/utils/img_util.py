@@ -11,7 +11,7 @@ import numpy as np
 import os
 import torch
 from torchvision.utils import make_grid
-
+import tifffile
 
 def img2tensor(imgs, bgr2rgb=True, float32=True):
     """Numpy array to tensor.
@@ -168,7 +168,7 @@ def imwrite(img, file_path, params=None, auto_mkdir=True):
     if auto_mkdir:
         dir_name = os.path.abspath(os.path.dirname(file_path))
         os.makedirs(dir_name, exist_ok=True)
-    return cv2.imwrite(file_path, img, params)
+    return tifffile.imwrite(file_path, img)
 
 
 def crop_border(imgs, crop_border):
