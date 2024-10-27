@@ -1,5 +1,7 @@
 # SSAI-3D: System- and Sample-agnostic Isotropic 3D Microscopy
 
+<img width="1012" alt="image" src="https://github.com/user-attachments/assets/ab5ca74c-23e1-464e-8232-eaf6d0df54d2">
+
 ## Overview
 
 This repository provides the implementation and resources for [SSAI-3D](https://arxiv.org/abs/2406.06337), a deep learning framework for achieving high-fidelity isotropic 3D resolution recovery in microscopy. SSAI-3D is a weakly physics-informed, domain-shift-resistant framework demonstrated across diverse microscopy system and a wide array of 3D biological samples.
