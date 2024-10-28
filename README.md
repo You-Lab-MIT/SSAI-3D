@@ -69,12 +69,11 @@ Using the provided network checkpoints, typical run time to restore resolution f
 
 ### Data Preparation 
 
-- The required datasets can be downloaded from this [link](https://drive.google.com/drive/folders/19KhzBk-VbITqaTUqJYe6j4UGu8oleUC_?usp=drive_link). Once downloaded, please unzip and transfer them to the `./dataset` directory.
+- The required anisotropic raw dataset can be downloaded from [here](https://drive.google.com/file/d/1p3CUWhaSJXAA_9k8p4nRrhjBmbegQ-vJ/view?usp=sharing). Once downloaded, please transfer it to `~/SSAI-3D/demo` directory.
 
-### Model Checkpoints
+### Pre-trained Model Checkpoints
 
-- Download the model checkpoints from this [link](https://drive.google.com/drive/folders/1bMJhmWZNUGmZzrsBTQkDy8JnxjP9iKKV?usp=drive_link) and unzip and transfer them to the `./experiments` folder.
-
+- Download the pre-trained model checkpoint from [here](https://drive.google.com/file/d/1Q3d7y96dQsd3Xk4l8c05M2VnUlu9q9CL/view?usp=sharing), and transfer it to `~/SSAI-3D/demo/experiments/demo_neurons`
 ### Model Inference
 
 For detailed instructions on conducting model inference, please consult the `./demo/demo_test.ipynb` file within the demo directory.
