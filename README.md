@@ -146,7 +146,7 @@ For detailed instructions on running model inference, see:
 
 ### 3. Generalizable Model Testing Example
 
-For testing on custom data, a generalizable demo is also provided. However, since SSAI-3D is optimized for fine-tuning on specific 3D volumes, we recommend referring to  **1. Fine-tuning Example** for optimal performance.
+For testing on custom data without fine-tuning, a generalizable demo is also provided. However, since SSAI-3D is optimized for fine-tuning on specific 3D volumes, we recommend referring to  **1. Fine-tuning Example** for optimal performance.
 
 
 
