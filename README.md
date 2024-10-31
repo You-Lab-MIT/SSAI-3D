@@ -63,7 +63,7 @@ This demonstration is organized into three sections:
 
 #### Data Preparation
 
-- For all usages, please prepare your data in xxxxx format.
+- For all usages, please prepare your data in tiff format, with shape `(depth, width, height)`.
 
 - Move your single-stack 3D dataset to `~/SSAI-3D/demo`. For example, it can be [mouse brain neurons](https://drive.google.com/file/d/1p3CUWhaSJXAA_9k8p4nRrhjBmbegQ-vJ/view?usp=sharing) or [mouse liver](https://www.nature.com/articles/s41592-018-0216-7#data-availability).
 
