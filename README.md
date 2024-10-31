@@ -86,11 +86,9 @@ Typical runtime for resolution restoration on a standard desktop computer is app
 
 ---
 
-### 2. Testing Example
+### 2. Testing Example (`./demo/demo_test.ipynb`)
 
-This section enables rapid testing of SSAI-3D on a dataset with a fine-tuned model, bypassing the fine-tuning stage. The provided notebook uses the pre-supplied dataset and its corresponding fine-tuned model to evaluate deconvolution results.
 
-Since SSAI-3D is optimized for fine-tuning on specific 3D volumes, users seeking a more generalizable model should refer to the next section: **3. Generalizable Model Testing Example**.
 
 
 #### Data Preparation
@@ -101,21 +99,15 @@ Since SSAI-3D is optimized for fine-tuning on specific 3D volumes, users seeking
 
 - Download the fine-tuned model [here](https://drive.google.com/file/d/1Q3d7y96dQsd3Xk4l8c05M2VnUlu9q9CL/view?usp=sharing) and save it in ```~/SSAI-3D/demo/experiments/demo_neurons```
 
-#### Model Inference
 
-For detailed instructions on running model inference, see:
-```
-./demo/demo_test.ipynb
-```
+#### Estimated Runtime
+Typical runtime for the testing notebook is ~5 minutes. Since SSAI-3D is optimized for fine-tuning on specific 3D volumes, users seeking a more generalizable model should refer to the next section: **3. Generalizable Model Testing Example**.
 
 ---
 
 
-### 3. Generalizable Model Testing Example
-
-For testing on custom data without fine-tuning, a generalizable demo is also provided. However, since SSAI-3D is optimized for fine-tuning on specific 3D volumes, we recommend referring to  **1. Fine-tuning Example** for optimal performance.
-
-
+### 3. Generalizable Model Testing Example (`./demo/demo_generalizable.ipynb`)
+ 
 
 
 #### Data Preparation
@@ -126,11 +118,8 @@ For testing on custom data without fine-tuning, a generalizable demo is also pro
 
 - Download the generalizable pre-trained, fine-tuned model from [this link](https://drive.google.com/file/d/1mhpZ00h3UvXvTfsA_feYd1B2sWD-06uY/view). Place the model in ```./experiments/pretrained_models```
 
-#### Model Inference
+#### Estimated Runtime
+Typical runtime for the testing notebook is ~5 minutes. However, since SSAI-3D is optimized for fine-tuning on specific 3D volumes, we recommend referring to  **1. Fine-tuning Example** for optimal performance.
 
-For detailed instructions on running model inference, see:
-```
-./demo/demo_generalizable.ipynb
-```
 ---
 This guide will help you maximize the performance of SSAI-3D for fine-tuning, testing, and application to diverse fluorescence microscopy datasets. For optimal results with new data, consider performing fine-tuning as described in **1. Fine-tuning Example** above.
