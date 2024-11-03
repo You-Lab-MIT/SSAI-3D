@@ -65,7 +65,7 @@ This demonstration is organized into three sections:
 
 - For all usages, please prepare your data in a single tiff format, with shape `(depth, width, height)`.
 
-- Move your single-stack 3D dataset to `~/SSAI-3D/demo`. For example, it can be [mouse brain neurons](https://drive.google.com/file/d/1p3CUWhaSJXAA_9k8p4nRrhjBmbegQ-vJ/view?usp=sharing) or [mouse liver](https://www.nature.com/articles/s41592-018-0216-7#data-availability).
+- Move your single-stack 3D dataset to `~/SSAI-3D/demo`. For example, it can be 16 bit [mouse brain neurons](https://drive.google.com/file/d/1p3CUWhaSJXAA_9k8p4nRrhjBmbegQ-vJ/view?usp=sharing) or [mouse liver](https://www.nature.com/articles/s41592-018-0216-7#data-availability).
 
 #### Pre-trained Model Checkpoints
 
@@ -113,7 +113,7 @@ Please refer to the first section for expected results. Typical runtime for the 
 
 - For all usages, please prepare your data in a single tiff format, with shape `(depth, width, height)`.
 
-- Move your single-stack 3D dataset to `~/SSAI-3D/demo`. For example, it can be [mouse brain neurons](https://drive.google.com/file/d/1p3CUWhaSJXAA_9k8p4nRrhjBmbegQ-vJ/view?usp=sharing) or [mouse liver](https://www.nature.com/articles/s41592-018-0216-7#data-availability).
+- Move your single-stack 3D dataset to `~/SSAI-3D/demo`. For example, it can be 16 bit [mouse brain neurons](https://drive.google.com/file/d/1p3CUWhaSJXAA_9k8p4nRrhjBmbegQ-vJ/view?usp=sharing) or [mouse liver](https://www.nature.com/articles/s41592-018-0216-7#data-availability).
 
 #### Fine-tuned Model Checkpoints
 
