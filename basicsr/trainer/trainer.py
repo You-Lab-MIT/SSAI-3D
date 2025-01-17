@@ -21,7 +21,10 @@ class SurgeonTrainer(nn.Module):
             nn.Dropout(0.2),
             nn.GELU(),
             nn.Linear(64,1),)
-        self.mlp.load_state_dict(torch.load('./experiments/sur.pt', weights_only=True))
+        try:
+            self.mlp.load_state_dict(torch.load('./experiments/sur.pt', weights_only=True))
+        except:
+            print('None weight loaded')
 
     def forward(self, x1, x2):
         x1 = self.mlp(x1)
