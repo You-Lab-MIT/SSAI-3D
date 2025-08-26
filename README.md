@@ -4,7 +4,7 @@
 
 ## Overview
 
-This repository provides the implementation and resources for [SSAI-3D](https://arxiv.org/abs/2406.06337), a deep learning framework for achieving high-fidelity isotropic 3D resolution recovery in microscopy. SSAI-3D is a weakly physics-informed, domain-shift-resistant framework demonstrated across diverse microscopy system and a wide array of 3D biological samples.
+This repository provides the implementation and resources for [SSAI-3D (Nature Communications 2025)](https://www.nature.com/articles/s41467-025-56078-4), a deep learning framework for achieving high-fidelity isotropic 3D resolution recovery in microscopy. SSAI-3D is a weakly physics-informed, domain-shift-resistant framework demonstrated across diverse microscopy system and a wide array of 3D biological samples.
 
 <img width="1012" alt="image" src="https://github.com/user-attachments/assets/8beebb61-3ea2-49dc-b273-50f17e796c37">
 
@@ -125,3 +125,19 @@ Please refer to the first section for expected results. Typical runtime for the 
 
 ---
 This guide will help you maximize the performance of SSAI-3D for fine-tuning, testing, and application to diverse fluorescence microscopy datasets. For optimal results with new data, consider performing fine-tuning as described in **1. Fine-tuning Example** above.
+
+## References
+Please cite the following published paper for this framework.
+
+```
+@article{han2025system,
+  title={System-and sample-agnostic isotropic three-dimensional microscopy by weakly physics-informed, domain-shift-resistant axial deblurring},
+  author={Han, Jiashu and Liu, Kunzan and Isaacson, Keith B and Monakhova, Kristina and Griffith, Linda G and You, Sixian},
+  journal={Nature Communications},
+  volume={16},
+  number={1},
+  pages={745},
+  year={2025},
+  publisher={Nature Publishing Group UK London}
+}
+```
