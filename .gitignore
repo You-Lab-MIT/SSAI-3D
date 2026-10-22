@@ -11,7 +11,7 @@ dist/
 *.tiff
 *.pth
 *.state
-weights/
+/weights
 experiments/
 runs/
 results/
