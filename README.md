@@ -2,6 +2,14 @@
 
 <!-- <img width="1012" alt="image" src="./resource/logo.jpg"> -->
 
+## News
+
+- **2025-01**: SSAI-3D is published in [Nature Communications](https://www.nature.com/articles/s41467-025-56078-4).
+- **2026-10**: We reorganised the code to make it easier to use: an installable package, a one-command pipeline (`ssai3d run`), GPU memory limits and several bug fixes (see [CHANGELOG.md](CHANGELOG.md)). The code as published is kept under the tag [`v1.0-paper`](https://github.com/You-Lab-MIT/SSAI-3D/tree/v1.0-paper).
+- **2026-10**: We are excited to share two follow-up works that build on SSAI-3D and benchmark against it:
+  - **DeepIso**: self-supervised internal learning for isotropic 3D fluorescence microscopy. Wei, ..., Guo, Liu, [*Laser & Photonics Reviews* (2026)](https://doi.org/10.1002/lpor.71963).
+  - **MicroFM**: physics-guided flow matching with microscope-matched PSFs and an implicit volumetric prior. Zhan, Jiang, ..., Xu, [*CVPR* 2026](https://openaccess.thecvf.com/content/CVPR2026/papers/Zhan_MicroFM_Physics-guided_Flow_Matching_for_Isotropic_Microscopy_Reconstruction_CVPR_2026_paper.pdf).
+
 ## Overview
 
 This repository provides the implementation and resources for [SSAI-3D (Nature Communications 2025)](https://www.nature.com/articles/s41467-025-56078-4), a deep learning framework for achieving high-fidelity isotropic 3D resolution recovery in microscopy. SSAI-3D is a weakly physics-informed, domain-shift-resistant framework demonstrated across diverse microscopy system and a wide array of 3D biological samples.
@@ -105,5 +113,27 @@ Please cite the following published paper for this framework.
   pages={745},
   year={2025},
   publisher={Nature Publishing Group UK London}
+}
+```
+
+### Follow-up works
+
+Full citations for the follow-up works listed under News:
+
+```
+@article{wei2026self,
+  title={Self-Supervised Internal Learning Enhances Isotropic Resolution for Three-Dimensional Fluorescence Microscopy},
+  author={Wei, Mingzhe and Xu, Pengcheng and Liu, Junyu and Li, Xuesong and Feng, Xuhui and Zhu, Jun and Dong, Renwei and Ran, Hengjia and Zhu, Wentao and Han, Yubing and Li, Yue and Guo, Min and Liu, Huafeng},
+  journal={Laser \& Photonics Reviews},
+  pages={e71963},
+  year={2026},
+  doi={10.1002/lpor.71963}
+}
+
+@inproceedings{zhan2026microfm,
+  title={MicroFM: Physics-guided Flow Matching for Isotropic Microscopy Reconstruction},
+  author={Zhan, Xingzu and Jiang, Runmin and Gupta, Vatsal and Swaminathan, Tanush and Wang, Yanwen and Zhang, Genpei and Wang, Haili and Xu, Min},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year={2026}
 }
 ```
