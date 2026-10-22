@@ -19,4 +19,5 @@ tb_logger/
 logs/
 demo/demo_dataset/
 demo/test_dataset/
+demo/results*/
 !ssai3d/assets/*.pt

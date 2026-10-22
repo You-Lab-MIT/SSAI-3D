@@ -177,6 +177,7 @@ class Run:
                 continue
             logger.info(f'[{step}] starting')
             if torch.cuda.is_available():
+                torch.cuda.empty_cache()
                 torch.cuda.reset_peak_memory_stats()
             t0 = time.time()
             getattr(self, step)()

@@ -1,5 +1,6 @@
 """Device selection with an optional GPU memory budget."""
 import logging
+import os
 
 import torch
 
@@ -16,7 +17,8 @@ def setup_device(gpu=0, max_mem_gb=None):
         gpu (int | None): CUDA device index, or None / -1 for CPU.
         max_mem_gb (float | None): Total memory budget on that GPU, including
             the CUDA context. PyTorch raises an out-of-memory error instead of
-            growing past it. None means no limit.
+            growing past it. None falls back to the SSAI3D_MAX_MEM_GB
+            environment variable, then to no limit.
 
     Returns:
         torch.device
@@ -27,6 +29,8 @@ def setup_device(gpu=0, max_mem_gb=None):
         return torch.device('cpu')
 
     torch.cuda.set_device(gpu)
+    if max_mem_gb is None and os.environ.get('SSAI3D_MAX_MEM_GB'):
+        max_mem_gb = float(os.environ['SSAI3D_MAX_MEM_GB'])
     if max_mem_gb is not None:
         total = torch.cuda.get_device_properties(gpu).total_memory
         budget = (max_mem_gb - CUDA_CONTEXT_GB) * 1024**3
