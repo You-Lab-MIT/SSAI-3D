@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ssai3d"
+dynamic = ["version"]
+description = "SSAI-3D: system- and sample-agnostic isotropic 3D microscopy"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+dependencies = [
+    "torch>=1.13",
+    "torchvision",
+    "numpy",
+    "scipy>=1.1",
+    "scikit-image",
+    "opencv-python",
+    "tifffile",
+    "pyyaml",
+    "tqdm",
+    "lmdb",
+    "requests",
+    "tensorboard",
+    "gdown",
+]
+
+[project.optional-dependencies]
+notebooks = ["jupyter", "matplotlib", "matplotlib-scalebar"]
+dev = ["pytest"]
+
+[project.scripts]
+ssai3d = "ssai3d.cli:main"
+
+[project.urls]
+Paper = "https://www.nature.com/articles/s41467-025-56078-4"
+Source = "https://github.com/You-Lab-MIT/SSAI-3D"
+
+[tool.setuptools.dynamic]
+version = { attr = "ssai3d.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["ssai3d*", "basicsr*"]
+
+[tool.setuptools.package-data]
+ssai3d = ["configs/*.yml", "assets/*.pt"]
+basicsr = ["metrics/*.npz", "data/meta_info/*.txt"]

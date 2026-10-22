@@ -5,7 +5,7 @@
 # Copyright 2018-2020 BasicSR Authors
 # ------------------------------------------------------------------------
 # general settings
-name: demo_neurons
+name: ssai3d_finetune
 model_type: ImageRestorationModel
 scale: 1
 num_gpu: 1
@@ -13,10 +13,10 @@ manual_seed: 10
 
 datasets:
   train:
-    name: reds-train
+    name: semi-synthetic
     type: PairedImageDataset
-    dataroot_gt: ~/
-    dataroot_lq: ~/
+    dataroot_gt: ~  # set by ssai3d.train.finetune
+    dataroot_lq: ~
 
     filename_tmpl: '{}'
     io_backend:
@@ -33,14 +33,6 @@ datasets:
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
     
-  val:
-    name: reds-val300-test
-    type: PairedImageDataset
-    dataroot_gt: ~/
-    dataroot_lq: ~/
-    io_backend:
-      type: disk
-
 
 network_g:
   type: NAFNetLocal
@@ -49,10 +41,9 @@ network_g:
   middle_blk_num: 1
   dec_blk_nums: [1, 1, 1, 1]
   
-ZEST: False
 # path
 path:
-  pretrain_network_g: ./experiments/pretrained_models/NAFNet-REDS-width64.pth
+  pretrain_network_g: ~  # set by the caller
   strict_load_g: true
   resume_state: ~
 
@@ -78,21 +69,9 @@ train:
     loss_weight: 1
     reduction: mean
 
-# validation settings
+# inference settings
 val:
-  val_freq: !!float 2500
   save_img: false
-
-
-  metrics:
-    psnr: # metric name, can be arbitrary
-      type: calculate_psnr
-      crop_border: 0
-      test_y_channel: false
-    ssim:
-      type: calculate_ssim
-      crop_border: 0
-      test_y_channel: false
 
 # logging settings
 logger:

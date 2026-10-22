@@ -278,7 +278,6 @@ class BaseModel():
             load_path, map_location=lambda storage, loc: storage)
         if param_key is not None:
             load_net = load_net[param_key]
-        print(' load net keys', load_net.keys)
         # remove unnecessary 'module.'
         for k, v in deepcopy(load_net).items():
             if k.startswith('module.'):

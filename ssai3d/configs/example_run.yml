@@ -1,0 +1,36 @@
+# Example config for `ssai3d run`. Relative paths are resolved against this file.
+name: demo_neurons
+raw: ../../demo/raw_data.tif          # 3D TIFF, shape (Z, Y, X)
+out_dir: ../../runs/demo_neurons
+
+mode: finetune                         # finetune: train on this stack | pretrained: apply weights.model
+downsample: 5                          # axial step / lateral pixel size
+gpu: 0                                 # CUDA index, -1 for CPU
+max_mem_gb: 10                         # total GPU memory budget; null for no limit
+crop: null                             # e.g. [[0, 80], [0, 400], [0, 500]] to restore a sub-volume
+
+weights:
+  pretrained: ../../weights/NAFNet-REDS-width64.pth
+  model: null                          # for mode: pretrained, e.g. generalizable_model.pth
+  denoise: null                        # optional, e.g. denoising_model.pth
+
+prepare:
+  kernel_num: 3                        # number of axial blur kernels (std 3, 5, 7, ...)
+  project_depth: 5                     # slices per max-intensity projection
+  zs_samples: 10                       # crops sampled for the surgeon
+  zs_half_size: 100
+  seed: 0
+
+train:
+  iters: 1000
+  lr: 1.0e-4
+  gt_size: 500                         # training crop size; lower it to save GPU memory
+  batch_size: 1
+  num_workers: 8
+  save_every: 500
+
+restore:
+  tile: null                           # tile size in px; null = whole slices, tiles on OOM
+
+output:
+  keep_intermediate: true              # false deletes slices and per-view outputs after fusion

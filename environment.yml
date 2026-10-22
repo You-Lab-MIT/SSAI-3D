@@ -1,0 +1,12 @@
+# conda env create -f environment.yml && conda activate ssai3d
+name: ssai3d
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu124
+      - torch==2.5.1
+      - torchvision==0.20.1
+      - -e .[notebooks,dev]

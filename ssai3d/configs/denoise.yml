@@ -34,7 +34,7 @@ network_g:
 
 # path
 path:
-  pretrain_network_g: ./experiments/pretrained_models/NAFNet-SIDD-width64.pth
+  pretrain_network_g: ~  # set by the caller
   strict_load_g: false
   resume_state: ~
 
