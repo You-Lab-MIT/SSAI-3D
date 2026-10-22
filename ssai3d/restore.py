@@ -8,7 +8,7 @@ import torch
 from tqdm import tqdm
 
 from basicsr.models import create_model
-from basicsr.utils import imfrombytes, img2tensor, tensor2img
+from basicsr.utils import imfrombytes, img2tensor, imwrite, tensor2img
 from ssai3d.config import load_opt
 
 logger = logging.getLogger('ssai3d')
@@ -74,8 +74,10 @@ def restore(input_pth, output_pth, model_pth, denoise=False, tile=None, device=N
     """Restore every slice in ``input_pth`` and write it to ``output_pth``.
 
     Inputs are read exactly as in the published pipeline (8-bit, scaled to the
-    slice maximum). Each output is the channel mean of the network's uint16
-    output, saved as a single-channel float32 TIFF under the same file name.
+    slice maximum). Outputs keep the input file names. Restored slices are
+    saved as the channel mean of the network's uint16 output (single-channel
+    float32). Denoised slices are saved as 3-channel uint16, as in v1.0,
+    because they are read again as network input.
 
     Args:
         tile (int | None): Process slices in tiles of this size. With None,
@@ -100,6 +102,9 @@ def restore(input_pth, output_pth, model_pth, denoise=False, tile=None, device=N
             logger.warning(f'Out of GPU memory on {name}; switching to {tile}px tiles.')
             out = run_network(net, x, tile)
         result = tensor2img(out)
+        if denoise:
+            imwrite(result, os.path.join(output_pth, name))
+            continue
         if result.ndim == 3:
             result = result.mean(-1)
         tifffile.imwrite(os.path.join(output_pth, name), result.astype(np.float32))

@@ -58,14 +58,22 @@ def _latest_state(states_dir):
 
 
 def _init_loggers(opt):
+    """Console logger plus a log file for this run.
+
+    The file handler is added explicitly: get_root_logger only attaches one when
+    the logger is first created, which is usually earlier (e.g. by the surgeon).
+    """
+    logger = get_root_logger(logger_name='basicsr', log_level=logging.INFO)
     log_file = osp.join(opt['path']['log'], f"train_{opt['name']}_{get_time_str()}.log")
-    logger = get_root_logger(logger_name='basicsr', log_level=logging.INFO, log_file=log_file)
+    file_handler = logging.FileHandler(log_file, 'w')
+    file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s'))
+    logger.addHandler(file_handler)
     logger.info(get_env_info())
     logger.info(dict2str(opt))
     tb_logger = None
     if opt['logger'].get('use_tb_logger'):
         tb_logger = init_tb_logger(log_dir=osp.join(opt['path']['experiments_root'], 'tb'))
-    return logger, tb_logger
+    return logger, tb_logger, file_handler
 
 
 def _train_loader(opt, logger):
@@ -120,7 +128,7 @@ def finetune(rank, gt_dir, lq_dir, pretrained, experiments_root, iters=1000, lr=
     if resume_state is None:
         make_exp_dirs(opt)
 
-    logger, tb_logger = _init_loggers(opt)
+    logger, tb_logger, file_handler = _init_loggers(opt)
     train_loader, train_sampler, total_iters = _train_loader(opt, logger)
 
     model = create_model(opt)
@@ -172,4 +180,6 @@ def finetune(rank, gt_dir, lq_dir, pretrained, experiments_root, iters=1000, lr=
     model.save(epoch=-1, current_iter=-1)
     if tb_logger:
         tb_logger.close()
+    logger.removeHandler(file_handler)
+    file_handler.close()
     return osp.join(opt['path']['models'], 'net_g_latest.pth')
