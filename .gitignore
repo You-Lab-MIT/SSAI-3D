@@ -1,0 +1,22 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.ipynb_checkpoints/
+.DS_Store
+
+# data, weights and outputs stay out of the repo
+*.tif
+*.tiff
+*.pth
+*.state
+weights/
+experiments/
+runs/
+results/
+tb_logger/
+logs/
+demo/demo_dataset/
+demo/test_dataset/
+!ssai3d/assets/*.pt
