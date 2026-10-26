@@ -118,7 +118,7 @@ tests/             unit tests (pytest)
 ---
 
 ## References
-Please cite the following published paper for this framework.
+Please cite the following papers for this framework.
 
 ```
 @article{han2025system,
@@ -130,6 +130,15 @@ Please cite the following published paper for this framework.
   pages={745},
   year={2025},
   publisher={Nature Publishing Group UK London}
+}
+
+@article{liu2025simultaneous,
+  title={Simultaneous Label-free Imaging of Nucleolar Dynamics and Subcellular Metabolic Shifts Across Tissue Contexts},
+  author={Liu, Kunzan and Kan, Ellen L and Cao, Honghao and Han, Jiashu and de Nola, Giovanni and Griffith, Linda G and Calo, Eliezer and You, Sixian},
+  journal={bioRxiv},
+  pages={2025.10.07.681013},
+  year={2025},
+  doi={10.1101/2025.10.07.681013}
 }
 ```
 
