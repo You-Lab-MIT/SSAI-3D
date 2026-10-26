@@ -8,7 +8,7 @@
 - **2026-10**: We reorganised the code to make it easier to use including several bug fixes. The code as published is kept under the tag [`v1.0-paper`](https://github.com/You-Lab-MIT/SSAI-3D/tree/v1.0-paper).
 - **2026-10**: We are excited to share two follow-up works that build on SSAI-3D and benchmark against it:
   - **DeepIso**: Wei *et al*., Self-supervised internal learning for isotropic 3D fluorescence microscopy. [*Laser & Photonics Reviews* (2026)](https://doi.org/10.1002/lpor.71963).
-  - **MicroFM**: Zhan *et al*., Physics-guided flow matching with microscope-matched PSFs and an implicit volumetric prior. [*CVPR* 2026](https://openaccess.thecvf.com/content/CVPR2026/papers/Zhan_MicroFM_Physics-guided_Flow_Matching_for_Isotropic_Microscopy_Reconstruction_CVPR_2026_paper.pdf).
+  - **MicroFM**: Zhan *et al*., Physics-guided flow matching with microscope-matched PSFs and an implicit volumetric prior. [*CVPR* (2026)](https://openaccess.thecvf.com/content/CVPR2026/papers/Zhan_MicroFM_Physics-guided_Flow_Matching_for_Isotropic_Microscopy_Reconstruction_CVPR_2026_paper.pdf).
 
 ## Overview
 
