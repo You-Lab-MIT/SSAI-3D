@@ -9,6 +9,7 @@
 - **2026-10**: We are excited to share two follow-up works that build on SSAI-3D and benchmark against it:
   - **DeepIso**: Wei *et al*., Self-supervised internal learning for isotropic 3D fluorescence microscopy. [*Laser & Photonics Reviews* (2026)](https://doi.org/10.1002/lpor.71963).
   - **MicroFM**: Zhan *et al*., Physics-guided flow matching with microscope-matched PSFs and an implicit volumetric prior. [*CVPR* (2026)](https://openaccess.thecvf.com/content/CVPR2026/papers/Zhan_MicroFM_Physics-guided_Flow_Matching_for_Isotropic_Microscopy_Reconstruction_CVPR_2026_paper.pdf).
+- **2026-10**: We introduce **SSAI-3D-v2**, which shows zero-shot capacity in more generalized settings, and apply it to understanding the nucleolus. The preprint is out on [bioRxiv](https://www.biorxiv.org/content/10.1101/2025.10.07.681013v1). A zero-shot example model is available below ([SSAI-3D-v2 zero-shot](#ssai-3d-v2-zero-shot)).
 
 ## Overview
 
@@ -61,6 +62,22 @@ ssai3d restore my_stack.tif --model weights/generalizable_model.pth --out result
 | `generalizable_model.pth` | fine-tuned on several 3D datasets; quick tests on new data |
 | `net_g_neurons.pth` | fine-tuned on the mouse brain neuron demo stack |
 | `denoising_model.pth` | optional denoiser for noisy stacks (`weights.denoise`) |
+| `ssai3d_v2_zeroshot.pth` | SSAI-3D-v2 zero-shot model: use directly on new stacks, no fine-tuning |
+
+### SSAI-3D-v2 zero-shot
+
+```bash
+ssai3d download --names ssai3d_v2_zeroshot.pth
+ssai3d restore my_stack.tif --model weights/ssai3d_v2_zeroshot.pth --downsample 5 --out results/my_stack
+```
+
+Results on the held-out half of the two-colour expanded U2OS cell of Wu et al. (*Nature* 2021, Fig. 1c), compared with its triple-view (hardware-corrected) reference; mean ± s.d. over training seeds. The v2 model never saw this cell. Data: [Zenodo 10.5281/zenodo.5495955](https://doi.org/10.5281/zenodo.5495955), CC BY 4.0.
+
+| | DNA PSNR (dB) | DNA SSIM | Tomm20 PSNR (dB) | Tomm20 SSIM |
+|---|---|---|---|---|
+| Raw input | 19.03 | 0.628 | 22.72 | 0.830 |
+| SSAI-3D (per-cell fine-tuning) | 17.39 ± 0.09 | 0.501 | 22.47 ± 0.02 | 0.675 |
+| **SSAI-3D-v2 zero-shot** | **19.32 ± 0.09** | 0.619 | **22.97 ± 0.05** | 0.831 |
 
 ---
 

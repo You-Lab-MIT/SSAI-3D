@@ -107,7 +107,7 @@ def tensor2img(tensor, rgb2bgr=True, out_type=np.uint16, min_max=(0, 1)):
     return result
 
 
-def imfrombytes(content, flag='color', float32=False, dtype = np.uint8):
+def imfrombytes(content, flag='color', float32=False, dtype = np.uint8, norm='slice'):
     """Read an image from bytes.
 
     Args:
@@ -116,6 +116,9 @@ def imfrombytes(content, flag='color', float32=False, dtype = np.uint8):
             candidates are `color`, `grayscale` and `unchanged`.
         float32 (bool): Whether to change to float32., If True, will also norm
             to [0, 1]. Default: False.
+        norm (str): 'slice' divides by the image's own maximum (SSAI-3D v1);
+            'volume' divides by the full range of the decoded type, keeping the
+            normalisation of the whole volume the slices were cut from.
 
     Returns:
         ndarray: Loaded image array.
@@ -129,13 +132,13 @@ def imfrombytes(content, flag='color', float32=False, dtype = np.uint8):
     if img_np is None:
         raise Exception('None .. !!!')
     img = cv2.imdecode(img_np, imread_flags[flag])
+    full = np.iinfo(img.dtype).max if np.issubdtype(img.dtype, np.integer) else 1.0
     if float32:
         img = img.astype(np.float32)
-    # if dtype == np.uint8:
-    #     img = img / 255.
-    # elif dtype == np.uint16:
-    #     img = img / 65535.
-    img = img/img.max()
+    if norm == 'slice':
+        img = img/img.max()
+    else:
+        img = img/full
     return img
 
 def padding(img_lq, img_gt, gt_size):

@@ -88,7 +88,7 @@ class PairedImageDataset(data.Dataset):
         # print('gt path,', gt_path)
         img_bytes = self.file_client.get(gt_path, 'gt')
         try:
-            img_gt = imfrombytes(img_bytes, float32=True)
+            img_gt = imfrombytes(img_bytes, float32=True, norm=self.opt.get('norm', 'slice'))
         except:
             raise Exception("gt path {} not working".format(gt_path))
 
@@ -96,7 +96,7 @@ class PairedImageDataset(data.Dataset):
         # print(', lq path', lq_path)
         img_bytes = self.file_client.get(lq_path, 'lq')
         try:
-            img_lq = imfrombytes(img_bytes, float32=True)
+            img_lq = imfrombytes(img_bytes, float32=True, norm=self.opt.get('norm', 'slice'))
         except:
             raise Exception("lq path {} not working".format(lq_path))
 

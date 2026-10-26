@@ -17,6 +17,16 @@ logger = logging.getLogger('ssai3d')
 FALLBACK_TILE = 768
 
 
+def input_norm(model_pth):
+    """Input scaling a checkpoint was trained with: 'volume' if recorded in its
+    ``ssai3d`` entry (SSAI-3D-v2, new fine-tuning), else 'slice' (v1 weights)."""
+    try:
+        info = torch.load(model_pth, map_location='cpu', weights_only=True).get('ssai3d', {})
+    except Exception:  # older checkpoints that cannot be read weights-only
+        info = {}
+    return info.get('input_norm', 'slice')
+
+
 def load_network(model_pth, denoise=False, device=None):
     """Load a restoration (or denoising) network in eval mode."""
     opt = load_opt('denoise' if denoise else 'finetune', is_train=False, device=device,
@@ -70,11 +80,12 @@ def run_network(net, x, tile=None, overlap=128):
     return out / weight
 
 
-def restore(input_pth, output_pth, model_pth, denoise=False, tile=None, device=None):
+def restore(input_pth, output_pth, model_pth, denoise=False, tile=None, device=None, norm=None):
     """Restore every slice in ``input_pth`` and write it to ``output_pth``.
 
-    Inputs are read exactly as in the published pipeline (8-bit, scaled to the
-    slice maximum). Outputs keep the input file names. Restored slices are
+    Inputs are read as 8-bit and scaled per slice (v1 weights) or by the whole
+    volume (SSAI-3D-v2 and newly fine-tuned weights), as recorded in the
+    checkpoint. Outputs keep the input file names. Restored slices are
     saved as the channel mean of the network's uint16 output (single-channel
     float32). Denoised slices are saved as 3-channel uint16, as in v1.0,
     because they are read again as network input.
@@ -83,14 +94,17 @@ def restore(input_pth, output_pth, model_pth, denoise=False, tile=None, device=N
         tile (int | None): Process slices in tiles of this size. With None,
             whole slices are used and tiling starts automatically on an
             out-of-memory error.
+        norm (str | None): 'slice' or 'volume'; None uses the checkpoint's setting.
     """
     os.makedirs(output_pth, exist_ok=True)
+    norm = norm or input_norm(model_pth)
+    logger.info(f'{os.path.basename(str(model_pth))}: {norm} input normalisation')
     net = load_network(model_pth, denoise, device)
     device = next(net.parameters()).device
     names = sorted(os.listdir(input_pth))
     for name in tqdm(names, desc=os.path.basename(os.path.normpath(input_pth))):
         with open(os.path.join(input_pth, name), 'rb') as f:
-            img = imfrombytes(f.read(), float32=True)
+            img = imfrombytes(f.read(), float32=True, norm=norm)
         x = img2tensor(img, bgr2rgb=True, float32=True).unsqueeze(0).to(device)
         try:
             out = run_network(net, x, tile)

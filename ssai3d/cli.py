@@ -35,7 +35,8 @@ def cmd_restore(args):
     data.generate_raw_data(args.raw, work, args.downsample)
     for view in ('xz', 'yz'):
         restore(os.path.join(work, f'test_{view}'), os.path.join(args.out, 'restored', view),
-                args.model, tile=args.tile, device=device)
+                args.model, tile=args.tile, device=device,
+                norm=None if args.norm == 'auto' else args.norm)
     vol = data.fuse_views(os.path.join(args.out, 'restored', 'xz'),
                           os.path.join(args.out, 'restored', 'yz'))
     path = os.path.join(args.out, 'restored.tif')
@@ -69,6 +70,8 @@ def main(argv=None):
     p.add_argument('--tile', type=int, default=None, help='tile size in pixels')
     p.add_argument('--gpu', type=int, default=0, help='CUDA index, -1 for CPU')
     p.add_argument('--max-mem-gb', type=float, default=None, help='GPU memory budget')
+    p.add_argument('--norm', choices=('auto', 'slice', 'volume'), default='auto',
+                   help='input scaling; auto = as recorded in the model')
     p.set_defaults(func=cmd_restore)
 
     p = sub.add_parser('download', help='download the released weights')

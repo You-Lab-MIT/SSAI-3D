@@ -39,7 +39,7 @@ DEFAULTS = {
     'surgeon': {'num_samples': 2},
     'train': {'iters': 1000, 'lr': 1.0e-4, 'gt_size': 500, 'batch_size': 1,
               'num_workers': 8, 'save_every': 500},
-    'restore': {'tile': None},
+    'restore': {'tile': None, 'norm': None},  # norm: None = from the checkpoint
     'output': {'keep_intermediate': True},
 }
 
@@ -154,6 +154,7 @@ class Run:
                         device=self.device)
                 src = denoised
             restore(src, osp.join(self.out, 'restored', view), self._model_file(), tile=tile,
+                    norm=self.cfg['restore']['norm'],
                     device=self.device)
 
     def fuse(self):

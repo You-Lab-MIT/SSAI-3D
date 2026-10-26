@@ -92,7 +92,7 @@ def _train_loader(opt, logger):
 
 def finetune(rank, gt_dir, lq_dir, pretrained, experiments_root, iters=1000, lr=1e-4,
              gt_size=500, batch_size=1, num_workers=8, save_every=500, resume=False,
-             freeze_kwargs=None, device=None):
+             freeze_kwargs=None, device=None, norm='volume'):
     """Fine-tune ``pretrained`` on paired slices, training only the ranked layers.
 
     Args:
@@ -102,6 +102,9 @@ def finetune(rank, gt_dir, lq_dir, pretrained, experiments_root, iters=1000, lr=
         experiments_root (str): Output folder; the final weights are written to
             ``<experiments_root>/models/net_g_latest.pth``.
         resume (bool): Continue from the latest state in ``training_states/``.
+        norm (str): Input scaling, 'volume' (default) or 'slice' (v1). Per-slice
+            scaling stretches empty slices to full brightness; it is recorded in
+            the saved weights so `ssai3d.restore` reads inputs the same way.
 
     Returns:
         str: Path of the final weights.
@@ -109,7 +112,7 @@ def finetune(rank, gt_dir, lq_dir, pretrained, experiments_root, iters=1000, lr=
     overrides = {
         'datasets': {'train': {'dataroot_gt': gt_dir, 'dataroot_lq': lq_dir,
                                'gt_size': gt_size, 'batch_size_per_gpu': batch_size,
-                               'num_worker_per_gpu': num_workers}},
+                               'num_worker_per_gpu': num_workers, 'norm': norm}},
         'path': {'pretrain_network_g': str(pretrained)},
         'train': {'total_iter': iters, 'optim_g': {'lr': lr},
                   'scheduler': {'T_max': iters}},
@@ -178,8 +181,12 @@ def finetune(rank, gt_dir, lq_dir, pretrained, experiments_root, iters=1000, lr=
     elapsed = datetime.timedelta(seconds=int(time.time() - start_time))
     logger.info(f'End of training. Time consumed: {elapsed}')
     model.save(epoch=-1, current_iter=-1)
+    final = osp.join(opt['path']['models'], 'net_g_latest.pth')
+    ckpt = torch.load(final, map_location='cpu', weights_only=True)
+    ckpt['ssai3d'] = {'input_norm': norm, 'bit_depth': 8}
+    torch.save(ckpt, final)
     if tb_logger:
         tb_logger.close()
     logger.removeHandler(file_handler)
     file_handler.close()
-    return osp.join(opt['path']['models'], 'net_g_latest.pth')
+    return final

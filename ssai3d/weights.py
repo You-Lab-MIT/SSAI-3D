@@ -19,6 +19,9 @@ WEIGHTS = {
     'net_g_neurons.pth': (
         '1Q3d7y96dQsd3Xk4l8c05M2VnUlu9q9CL',
         '7358ef7b3930738d76e6f0f5e3536e73b710640b77ef4516909b2c93f32d6428'),
+    'ssai3d_v2_zeroshot.pth': (
+        '1ImpwaS53GaD30nKKBtWgN507iv41OB-g',
+        '96d248550a532846c7bc78cdba7f82e6c352c4f52e7ebce50fb2d13ed9c9088f'),
 }
 
 # Mouse brain neurons demo stack (Z, Y, X) = (194, 1153, 893), uint16.

@@ -31,6 +31,7 @@ train:
 
 restore:
   tile: null                           # tile size in px; null = whole slices, tiles on OOM
+  norm: null                           # input scaling; null = as recorded in the model
 
 output:
   keep_intermediate: true              # false deletes slices and per-view outputs after fusion
